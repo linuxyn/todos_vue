@@ -1,10 +1,24 @@
-# todo_vue
-任务清单小组件
+# todos_vue
 
-# version
-- Node: 18.13.0 - /usr/local/bin/node
-- Yarn: Not Found
-- npm: 8.19.3 - /usr/local/bin/npm
-- Vue: 2
-- webpack@5.75.0
-- @vue/cli 5.0.8
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
