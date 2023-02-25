@@ -24,7 +24,6 @@
         //   return pre + (current.done ? 1 : 0)
         // }, 0)
         //  return x
-
         return this.todos.reduce((pre, todo)=>pre + (todo.done ? 1 : 0)
         , 0)
         

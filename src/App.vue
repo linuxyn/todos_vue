@@ -66,16 +66,26 @@ export default {
       this.todos = this.todos.filter((todo)=>{
       return !todo.done
       })
+    },
+    //更新一个todo
+    updateTodo(id, title){
+      // 执行修改
+      console.log("执行修改,传过来的id和title=>",id, title)
+      this.todos.forEach(todo=>{
+        if(todo.id===id) todo.title = title
+      })
     }
   },
   mounted() {
-    console.log(eventBus.checkTodo,eventBus.deleteTodo)
     this.$bus.$on(eventBus.checkTodo,this.checkTodo)
     this.$bus.$on(eventBus.deleteTodo,this.deleteTodo)
+    this.$bus.$on(eventBus.updateTodo,this.updateTodo)
+
   },
   beforeDestroy() {
     this.$bus.$off(eventBus.checkTodo)
     this.$bus.$off(eventBus.deleteTodo)
+    this.$bus.$off(eventBus.updateTodo)
   },
   watch: {
     todos:{
@@ -112,6 +122,12 @@ export default {
     color: #fff;
     background-color: #da4f49;
     border: 1px solid #bd362f;
+  }
+  .btn-edit {
+    color: #fff;
+    background-color: skyblue;
+    border: 1px solid steelblue;
+    margin-right: 5px;
   }
 
   .btn-danger:hover {
