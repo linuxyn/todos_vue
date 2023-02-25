@@ -2,16 +2,12 @@
   <div id="app">
     <div class="todo-container">
       <div class="todo-wrap">
-        <!-- 通过App给子组件传递函数，主要是为了接收子组件中函数的返回值 -->
-        <todosHeader :addTodo="addTodo"/>
-        <todosList 
-          :todos="todos" 
-          :checkTodo="checkTodo"
-          :deleteTodo="deleteTodo"
-        />
+        <!-- 通过自定义事件给子组件绑定一个回调函数，回调函数保留在父组件 -->
+        <todosHeader @addTodo="addTodo"/>
+        <todosList :todos="todos"/>
         <todosFooter :todos="todos" 
-          :checkAllTodo="checkAllTodo" 
-          :clearAlltodo="clearAlltodo"
+          @checkAllTodo="checkAllTodo" 
+          @clearAlltodo="clearAlltodo"
         />
       </div>
     </div>
@@ -22,6 +18,7 @@
 import todosHeader from './components/todosHeader';
 import todosList from './components/todosList';
 import todosFooter from './components/todosFooter';
+import eventBus from './config/constans'
 
 export default {
   name: 'App',
@@ -32,12 +29,8 @@ export default {
   },
   data() {
     return {
-        todos: [
-        // {id: '001',title:'吃饭',done:false},
-        // {id: '002',title:'睡觉',done:false},
-        // {id: '003',title:'打豆豆',done:true},
-        // {id: '004',title:'学习',done:false},
-        ]
+        todos: JSON.parse(localStorage.getItem('todos')) || []
+        // todos: []
       }
   },
   methods: {
@@ -75,7 +68,24 @@ export default {
       })
     }
   },
-  
+  mounted() {
+    console.log(eventBus.checkTodo,eventBus.deleteTodo)
+    this.$bus.$on(eventBus.checkTodo,this.checkTodo)
+    this.$bus.$on(eventBus.deleteTodo,this.deleteTodo)
+  },
+  beforeDestroy() {
+    this.$bus.$off(eventBus.checkTodo)
+    this.$bus.$off(eventBus.deleteTodo)
+  },
+  watch: {
+    todos:{
+      immediate:true,
+      deep:true,
+      handler(value){
+        localStorage.setItem('todos', JSON.stringify(value))
+      }
+    }
+  }
 }
 </script>
 

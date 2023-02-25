@@ -10,18 +10,19 @@
   </li>
 </template>
 <script>
+  import eventBus from '../config/constans'
   export default {
     name: 'todosItem',
     // 声明接收todo对象
-    props: ['todo','checkTodo','deleteTodo'],
+    props: ['todo'],
     methods: {
       handleCheck(id){
         // 通过App组件将对应的done值取反
-        this.checkTodo(id)
+        this.$bus.$emit(eventBus.checkTodo,id)
       },
       handleTodo(id){
         if(confirm('确定删除么？')){
-          this.deleteTodo(id)
+          this.$bus.$emit(eventBus.deleteTodo,id)
         }
       }
     },
