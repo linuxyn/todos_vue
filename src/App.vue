@@ -1,151 +1,50 @@
 <template>
-  <div id="app">
-    <div class="todo-container">
-      <div class="todo-wrap">
-        <!-- 通过自定义事件给子组件绑定一个回调函数，回调函数保留在父组件 -->
-        <todosHeader @addTodo="addTodo"/>
-        <todosList :todos="todos"/>
-        <todosFooter :todos="todos" 
-          @checkAllTodo="checkAllTodo" 
-          @clearAlltodo="clearAlltodo"
-        />
+  <div>
+    <div>
+      <el-row>
+      <el-button>默认按钮</el-button>
+      <el-button type="primary">主要按钮</el-button>
+      <el-button type="success">成功按钮</el-button>
+      <el-button type="info">信息按钮</el-button>
+      <el-button type="warning">警告按钮</el-button>
+      <el-button type="danger">危险按钮</el-button>
+    </el-row>
+    </div>
+    <div class="row">
+      <Banner/>
+    </div>
+    <div class="row">
+      <div class="col-xs-2 col-xs-offset-2">
+        <div class="list-group">
+          <!-- 原始html我们使用a标签实现页面跳转 -->
+          <!-- <a class="list-group-item active" href="./about.html">About</a>
+          <a class="list-group-item" href="./home.html">Home</a> -->
+          
+          <!-- Vue中借助router-link标签实现路由的切换 -->
+          <router-link class="list-group-item" active-class="active" to="/about">About</router-link>
+          <!-- 这种情况反而比较复杂 -->
+          <!-- <router-link class="list-group-item" active-class="active" :to="{name:'aboutRouterName'}">About</router-link> -->
+          <router-link class="list-group-item" active-class="active" to="/home">Home</router-link>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="panel">
+          <div class="panel-body">
+            <!-- 指定组件的呈现位置 -->
+            <router-view></router-view>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
-import todosHeader from './components/todosHeader';
-import todosList from './components/todosList';
-import todosFooter from './components/todosFooter';
-import eventBus from './config/constans'
-
-export default {
-  name: 'App',
-  components: {
-    todosHeader,
-    todosList,
-    todosFooter,
-  },
-  data() {
-    return {
-        todos: JSON.parse(localStorage.getItem('todos')) || []
-        // todos: []
-      }
-  },
-  methods: {
-    // 添加一个todo
-    addTodo(todoObj){
-      console.log('App收到了子组件Header传过来的要添加的todo对象',todoObj)
-      this.todos.unshift(todoObj)
-    },
-    // 勾选或者取消勾选
-    checkTodo(id){
-      console.log('App收到了子组件Item传过来的是否要勾选的checkObj对象',id)
-      this.todos.forEach((todo)=>{
-        if(todo.id == id){
-          // 原来的值取反，赋值回去就可以了
-          todo.done = !todo.done
-        }
-      })
-    },
-    // 删除一个todo
-    deleteTodo(id){
-      console.log('App收到了子组件Item传过来的要删除的todo的id',id)
-      this.todos =  this.todos.filter(todo=> todo.id !== id)
-    },
-    // 全选或者取消全选
-    checkAllTodo(done){
-      console.log('App收到了子组件footer传过来的是否要全选或者取消全选',done)
-      this.todos.forEach(todo => {
-        todo.done = done
-      });
-    },
-    // 清除已完成任务
-    clearAlltodo(){
-      this.todos = this.todos.filter((todo)=>{
-      return !todo.done
-      })
-    },
-    //更新一个todo
-    updateTodo(id, title){
-      // 执行修改
-      console.log("执行修改,传过来的id和title=>",id, title)
-      this.todos.forEach(todo=>{
-        if(todo.id===id) todo.title = title
-      })
-    }
-  },
-  mounted() {
-    this.$bus.$on(eventBus.checkTodo,this.checkTodo)
-    this.$bus.$on(eventBus.deleteTodo,this.deleteTodo)
-    this.$bus.$on(eventBus.updateTodo,this.updateTodo)
-
-  },
-  beforeDestroy() {
-    this.$bus.$off(eventBus.checkTodo)
-    this.$bus.$off(eventBus.deleteTodo)
-    this.$bus.$off(eventBus.updateTodo)
-  },
-  watch: {
-    todos:{
-      immediate:true,
-      deep:true,
-      handler(value){
-        localStorage.setItem('todos', JSON.stringify(value))
-      }
-    }
+  import Banner from './components/Banner'
+  export default {
+    name:'App',
+    components:{Banner,}
   }
-}
 </script>
+<style scoped>
 
-<style>
-  /*base*/
-  body {
-    background: #fff;
-  }
-
-  .btn {
-    display: inline-block;
-    padding: 4px 12px;
-    margin-bottom: 0;
-    font-size: 14px;
-    line-height: 20px;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-    border-radius: 4px;
-  }
-
-  .btn-danger {
-    color: #fff;
-    background-color: #da4f49;
-    border: 1px solid #bd362f;
-  }
-  .btn-edit {
-    color: #fff;
-    background-color: skyblue;
-    border: 1px solid steelblue;
-    margin-right: 5px;
-  }
-
-  .btn-danger:hover {
-    color: #fff;
-    background-color: #bd362f;
-  }
-
-  .btn:focus {
-    outline: none;
-  }
-
-  .todo-container {
-    width: 600px;
-    margin: 0 auto;
-  }
-  .todo-container .todo-wrap {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
 </style>
